@@ -9,9 +9,13 @@ const AppLayout = ({ children }: IAppLayout) => {
     <>
       <Head>
         <title>Bodwell History</title>
+        <meta name="author" content="Cattynip <cattynip.cattynip@gmail.com>" />
+        <meta name="viewport" content="width=device-width" />
       </Head>
 
-      <div className="max-w-2xl w-full p-3 mx-auto">{children}</div>
+      <div className="max-w-2xl p-3 mx-auto w-full h-[100vh] bg-by">
+        {children}
+      </div>
     </>
   );
 };
