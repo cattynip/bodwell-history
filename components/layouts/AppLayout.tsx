@@ -13,9 +13,7 @@ const AppLayout = ({ children }: IAppLayout) => {
         <meta name="viewport" content="width=device-width" />
       </Head>
 
-      <div className="max-w-2xl p-3 mx-auto w-full h-[100vh] bg-by">
-        {children}
-      </div>
+      <div className="max-w-2xl p-3 mx-auto w-full h-[100vh]">{children}</div>
     </>
   );
 };
