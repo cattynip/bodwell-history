@@ -12,6 +12,7 @@ interface ISocialLinks {
   facebook: string;
   youtube: string;
   linktr: string;
+  website: stirng;
 }
 
 export type SocialLinkType = keyof ISocialLinks;

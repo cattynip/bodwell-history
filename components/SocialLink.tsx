@@ -1,18 +1,18 @@
 import { SocialLinkType } from "@libs/dataManager";
 import Anchor from "./Anchor";
 
-import { BsTwitter, BsYoutube } from "react-icons/bs";
+import { BsLink45Deg, BsTwitter, BsYoutube } from "react-icons/bs";
 import { SiLinktree } from "react-icons/si";
 import { AiFillInstagram } from "react-icons/ai";
 import { FaFacebookF } from "react-icons/fa";
 import { IconBaseProps } from "react-icons";
 import { useState } from "react";
 
-interface ISocialLinkAnchor {
+interface ISocialLinkAnchorProps {
   name: SocialLinkType;
 }
 
-export const SocialLinkAnchor = ({ name }: ISocialLinkAnchor) => {
+export const SocialLinkAnchor = ({ name }: ISocialLinkAnchorProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const url = TypeToLink(name);
@@ -21,7 +21,7 @@ export const SocialLinkAnchor = ({ name }: ISocialLinkAnchor) => {
   return (
     <Anchor href={url} target="_blank">
       <div
-        className={`border-[0.08em] border-black p-1.5 rounded-full transition-colors bg-transparent hover:bg-black`}
+        className={`border-[0.08em] border-black p-3 rounded-full transition-colors bg-transparent hover:bg-black`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -35,14 +35,14 @@ export const SocialLinkAnchor = ({ name }: ISocialLinkAnchor) => {
   );
 };
 
-interface ITypeToIcon {
+interface ITypeToIconProps {
   socialType: SocialLinkType;
 }
 
 export const TypeToIcon = ({
   socialType,
   ...props
-}: ITypeToIcon & IconBaseProps) => {
+}: ITypeToIconProps & IconBaseProps) => {
   const color = TypeToColor(socialType);
 
   if (socialType === "youtube") {
@@ -55,6 +55,8 @@ export const TypeToIcon = ({
     return <BsTwitter color={color} {...props} />;
   } else if (socialType === "facebook") {
     return <FaFacebookF color={color} {...props} />;
+  } else if (socialType === "website") {
+    return <BsLink45Deg color={color} {...props} />;
   } else {
     return <></>;
   }
@@ -66,11 +68,13 @@ export const TypeToColor = (socialType: SocialLinkType): string => {
   } else if (socialType === "linktr") {
     return "#41DA5C";
   } else if (socialType === "instagram") {
-    return "#D72579";
+    return "#E03184";
   } else if (socialType === "twitter") {
     return "#1C9BEF";
   } else if (socialType === "facebook") {
     return "#1774EB";
+  } else if (socialType === "website") {
+    return "#BBBBBB";
   } else {
     return "#00FF00";
   }
@@ -87,6 +91,8 @@ export const TypeToLink = (socialType: SocialLinkType): string => {
     return "https://twitter.com/mybodwell";
   } else if (socialType === "facebook") {
     return "https://www.facebook.com/bodwellhighschool/";
+  } else if (socialType === "website") {
+    return "https://bodwell.edu/";
   } else {
     return "https://google.com/";
   }
