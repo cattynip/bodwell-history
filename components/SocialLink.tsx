@@ -6,32 +6,68 @@ import { SiLinktree } from "react-icons/si";
 import { AiFillInstagram } from "react-icons/ai";
 import { FaFacebookF } from "react-icons/fa";
 import { IconBaseProps } from "react-icons";
+import { motion } from "framer-motion";
 import { useState } from "react";
+import ExpandableAnchor from "./ExpandableAnchor";
+import { link } from "fs";
 
 interface ISocialLinkAnchorProps {
   name: SocialLinkType;
+  delay: number;
+  extraClassname?: string;
 }
 
-export const SocialLinkAnchor = ({ name }: ISocialLinkAnchorProps) => {
+export const SocialLinkAnchor = ({
+  name,
+  delay,
+  extraClassname,
+  ...props
+}: ISocialLinkAnchorProps & IconBaseProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const url = TypeToLink(name);
   const color = TypeToColor(name);
 
   return (
-    <Anchor href={url} target="_blank">
-      <div
-        className={`border-[0.08em] border-black p-3 rounded-full transition-colors bg-transparent hover:bg-black`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <TypeToIcon
-          socialType={name}
-          size={20}
-          color={isHovered ? color : "#000000"}
-        />
-      </div>
-    </Anchor>
+    <motion.div
+      initial={{
+        y: -20,
+        opacity: 0,
+      }}
+      animate={{
+        y: 0,
+        opacity: 1,
+      }}
+      transition={{
+        delay: (delay / 1000) * 100,
+      }}
+      exit={{
+        y: 20,
+        opacity: 0,
+        transition: {
+          duration: 0.2,
+        },
+      }}
+      className="flex flex-col items-center justify-center"
+    >
+      <Anchor href={url} target="_blank">
+        <div
+          className={`border-[0.08em] border-black p-3 rounded-full transition-colors bg-transparent hover:bg-black w-min mx-auto cursor-pointer ${
+            extraClassname ? extraClassname : ""
+          }`}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <TypeToIcon
+            socialType={name}
+            size={30}
+            color={isHovered ? color : "#000000"}
+            {...props}
+          />
+        </div>
+        <p className="text-center">{name}</p>
+      </Anchor>
+    </motion.div>
   );
 };
 
@@ -46,7 +82,13 @@ export const TypeToIcon = ({
   const color = TypeToColor(socialType);
 
   if (socialType === "youtube") {
-    return <BsYoutube color={color} {...props} />;
+    return (
+      <BsYoutube
+        color={color}
+        className="translate-y-[1px] translate-x-[1px]"
+        {...props}
+      />
+    );
   } else if (socialType === "linktr") {
     return <SiLinktree color={color} {...props} />;
   } else if (socialType === "instagram") {
@@ -54,7 +96,9 @@ export const TypeToIcon = ({
   } else if (socialType === "twitter") {
     return <BsTwitter color={color} {...props} />;
   } else if (socialType === "facebook") {
-    return <FaFacebookF color={color} {...props} />;
+    return (
+      <FaFacebookF color={color} className="-translate-x-[1px]" {...props} />
+    );
   } else if (socialType === "website") {
     return <BsLink45Deg color={color} {...props} />;
   } else {
