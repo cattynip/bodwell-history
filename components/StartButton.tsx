@@ -1,5 +1,13 @@
-import { useEffect, useRef, useState } from "react";
 import {
+  DragEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  AnimatePresence,
   SpringOptions,
   motion,
   useMotionValue,
@@ -7,13 +15,23 @@ import {
 } from "framer-motion";
 import { useRouter } from "next/router";
 
-type coordinatePair = { x: number; y: number };
+type coordinatePair<T = number> = { x: T; y: T };
+
+interface IAnimateHoverProps {
+  x: number;
+  y: number;
+  moveXPosFn: (moveTo: number) => void;
+  moveYPosFn: (moveTo: number) => void;
+  cursorXPos: number;
+  cursorYPos: number;
+}
 
 const StartButton = () => {
   const router = useRouter();
   const parentRef = useRef<HTMLDivElement>(null);
+  const childRef = useRef<HTMLDivElement>(null);
 
-  const btnLimitRange = 0;
+  const btnLimitRange = 20;
   const [btnLimit, setBtnLimit] = useState<{
     first: coordinatePair;
     second: coordinatePair;
@@ -26,8 +44,8 @@ const StartButton = () => {
   const cursorY = useMotionValue(0);
 
   const animationConfig: SpringOptions = {
-    damping: 100,
-    stiffness: 1000,
+    damping: 300,
+    stiffness: 1500,
     mass: 10,
   };
   const cursorXSpring = useSpring(cursorX, animationConfig);
@@ -37,10 +55,38 @@ const StartButton = () => {
     router.push("/introduction");
   };
 
-  useEffect(() => {
-    if (!parentRef.current) return;
+  const calculateHover = useCallback(
+    ({
+      x,
+      y,
+      moveXPosFn,
+      moveYPosFn,
+      cursorXPos,
+      cursorYPos,
+    }: IAnimateHoverProps) => {
+      if (
+        x <= btnLimit.first.x ||
+        x >= btnLimit.second.x ||
+        y <= btnLimit.first.y ||
+        y >= btnLimit.second.y
+      ) {
+        moveXPosFn(0);
+        moveYPosFn(0);
+      } else {
+        if (!(x <= btnLimit.first.x || x >= btnLimit.second.x)) {
+          moveXPosFn(cursorXPos);
+        }
 
-    const moveCursor = (event: MouseEventInit) => {
+        if (!(y <= btnLimit.first.y || y >= btnLimit.second.y)) {
+          moveYPosFn(cursorYPos);
+        }
+      }
+    },
+    [btnLimit]
+  );
+
+  const animateBtn = useCallback(
+    (event: MouseEvent<HTMLDivElement> | MouseEventInit) => {
       if (!parentRef.current) return;
       if (!event.clientX || !event.clientY) return;
 
@@ -55,41 +101,29 @@ const StartButton = () => {
         event.clientY
       );
 
-      if (
-        event.clientX <= btnLimit.first.x ||
-        event.clientX >= btnLimit.second.x ||
-        event.clientY <= btnLimit.first.y ||
-        event.clientY >= btnLimit.second.y
-      ) {
-        cursorX.set(0);
-        cursorY.set(0);
-      } else {
-        if (
-          !(
-            event.clientX <= btnLimit.first.x ||
-            event.clientX >= btnLimit.second.x
-          )
-        ) {
-          cursorX.set(cursorXPos);
-        }
+      calculateHover({
+        x: event.clientX,
+        y: event.clientY,
+        moveXPosFn(moveTo) {
+          cursorX.set(moveTo);
+        },
+        moveYPosFn(moveTo) {
+          cursorY.set(moveTo);
+        },
+        cursorXPos,
+        cursorYPos,
+      });
+    },
+    [calculateHover, cursorX, cursorY]
+  );
 
-        if (
-          !(
-            event.clientY <= btnLimit.first.y ||
-            event.clientY >= btnLimit.second.y
-          )
-        ) {
-          cursorY.set(cursorYPos);
-        }
-      }
-    };
-
-    window.addEventListener("mousemove", moveCursor);
+  useEffect(() => {
+    window.addEventListener("mousemove", animateBtn);
 
     return () => {
-      window.removeEventListener("mousemove", moveCursor);
+      window.removeEventListener("mousemove", animateBtn);
     };
-  }, [cursorX, cursorY, btnLimit]);
+  }, [cursorX, cursorY, calculateHover, animateBtn]);
 
   useEffect(() => {
     if (!parentRef.current) return;
@@ -112,15 +146,25 @@ const StartButton = () => {
   }, []);
 
   return (
-    <div
-      ref={parentRef}
-      className="w-36 h-36 flex items-center justify-center border border-gray-500 rounded-full"
-    >
-      <motion.div
-        className="w-24 h-24 bg-mbg rounded-full"
-        style={{ translateX: cursorXSpring, translateY: cursorYSpring }}
-      />
-    </div>
+    <AnimatePresence>
+      <div
+        ref={parentRef}
+        className="w-36 h-36 flex items-center justify-center border border-gray-500 rounded-full cursor-pointer"
+        onMouseMove={animateBtn}
+      >
+        <motion.div
+          ref={childRef}
+          className="w-32 h-32 bg-mbg rounded-full"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            translateX: cursorXSpring,
+            translateY: cursorYSpring,
+            scale: btnScaleUp,
+          }}
+        />
+      </div>
+    </AnimatePresence>
   );
 };
 
