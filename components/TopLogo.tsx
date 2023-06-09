@@ -5,11 +5,28 @@ import SocialLinkAnchor from "@components/SocialLink";
 import { useState } from "react";
 
 const TopLogo = () => {
-  const [startAnimation, setStartAnimation] = useState<boolean>(false);
   const [hoverOnImageArea, setHoverOnImageArea] = useState<boolean>(false);
 
   return (
-    <div
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: -20,
+      }}
+      animate={{
+        opacity: 1,
+        y: [0, -15],
+        transition: {
+          y: {
+            duration: 0.8,
+            repeat: 5,
+            repeatType: "reverse",
+            ease: "easeOut",
+          },
+          delay: 1,
+          duration: 0.5,
+        },
+      }}
       className="relative"
       onMouseEnter={() => setHoverOnImageArea(true)}
       onMouseLeave={() => setHoverOnImageArea(false)}
@@ -24,7 +41,6 @@ const TopLogo = () => {
         height={720}
         quality={100}
         priority
-        onLoadingComplete={() => setStartAnimation(true)}
       />
       <AnimatePresence>
         {hoverOnImageArea && (
@@ -38,7 +54,7 @@ const TopLogo = () => {
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 
