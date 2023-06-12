@@ -1,11 +1,10 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import { useRouter } from "next/router";
 
-const Document = () => {
+const BodwellHistory = () => {
   return (
     <Html lang="en">
       <Head />
-      <body>
+      <body className="overflow-hidden">
         <Main />
         <NextScript />
       </body>
@@ -13,4 +12,4 @@ const Document = () => {
   );
 };
 
-export default Document;
+export default BodwellHistory;
