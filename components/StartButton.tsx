@@ -278,11 +278,11 @@ const StartButton = () => {
     <AnimatePresence>
       <div
         ref={parentRef}
-        className="w-36 h-36 flex items-center justify-center border border-gray-500 rounded-full cursor-pointer"
+        className="w-28 h-28 flex items-center justify-center border border-gray-500 rounded-full cursor-pointer"
       >
         <motion.div
           ref={childRef}
-          className="w-32 h-32 bg-mbg rounded-full"
+          className="w-24 h-24 bg-mbg rounded-full"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onMouseDown={onBtnMouseDown}

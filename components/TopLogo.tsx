@@ -34,7 +34,7 @@ const TopLogo = () => {
       <Image
         src={BodwellLogo}
         alt="Bodwell Logo"
-        className={`w-[17rem] h-[17rem] max-w-xs bg-white rounded-full shadow-2xl transition-all ${
+        className={`w-72 h-72 max-w-xs bg-white rounded-full shadow-2xl transition-all ${
           hoverOnImageArea && "blur-xl"
         }`}
         width={720}
