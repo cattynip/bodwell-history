@@ -1,47 +1,81 @@
-import { getRandomNumber, getRandomNumberBetween } from "@libs/maths";
-import { ColorT } from "./GlowCanvas";
+import { getRandomBoolean, getRandomNumberBetween } from "@libs/maths";
+import { ColorT, MinMaxT, PositionCoor } from "./GlowCanvas";
 
-type RandomValueT = "width" | "height" | "radius" | "velocity";
-type MinMaxT<T = number> = { min: T; max: T };
+/*
+ * TODO: Change its color with animation.
+ * TODO: Appear from outside of the canvas into somewhere in the canvas and move constantly.
+ */
+
+type QuadrantT = 1 | 2 | 3 | 4;
+
+interface IGetRandomInitialCoor extends PositionCoor {
+  direction: QuadrantT;
+}
 
 class GlowBubble {
+  private ctx: CanvasRenderingContext2D;
   private stageWidth: number;
   private stageHeight: number;
   private stageRange: number;
+  private radiusLimit: MinMaxT;
   private radius: number;
-  private ctx: CanvasRenderingContext2D;
+  private color: ColorT;
   private x: number;
   private y: number;
+  private initVX: number;
+  private initVY: number;
   private vx: number;
   private vy: number;
   private vr: number;
-  private radiusLimit: MinMaxT;
-  private color: ColorT;
+  private animationStarted: boolean;
 
   constructor(
-    stageWidth: number,
-    stageHeight: number,
     ctx: CanvasRenderingContext2D,
-    color: ColorT
+    color: ColorT,
+    stageInfo: { width: number; height: number },
+    initialRadius: number,
+    velocityInfo: { x: number; y: number; r: number },
+    radiusLimit: { min: number; max: number }
   ) {
     this.ctx = ctx;
-    this.stageWidth = stageWidth;
-    this.stageHeight = stageHeight;
+    this.stageWidth = stageInfo.width;
+    this.stageHeight = stageInfo.height;
     this.stageRange = 100;
 
-    this.radiusLimit = { min: 400, max: 900 };
-    this.radius = this.getRandomValue("radius");
+    this.radiusLimit = radiusLimit;
+    this.radius = initialRadius;
     this.color = color;
-    this.x = this.getRandomValue("width");
-    this.y = this.getRandomValue("height");
-    this.vx = this.getRandomValue("velocity");
-    this.vy = this.getRandomValue("velocity");
-    this.vr = 0.3;
+
+    const initialCoor = this.getRandomInitialCoor(this.radius);
+    this.x = initialCoor.x;
+    this.y = initialCoor.y;
+    this.vx = velocityInfo.x;
+    this.vy = velocityInfo.y;
+    this.vr = velocityInfo.r;
+
+    if (initialCoor.direction <= 2) {
+      this.initVY = 2;
+    } else {
+      this.initVY = -2;
+    }
+
+    if (initialCoor.direction === 1 || initialCoor.direction === 4) {
+      this.initVX = -2;
+    } else {
+      this.initVX = 2;
+    }
+
+    this.animationStarted = false;
   }
 
   public animate() {
-    this.moveConstantly();
     this.drawBubble();
+
+    if (this.animationStarted) {
+      this.moveConstantly();
+    } else {
+      this.appearing();
+    }
   }
 
   private drawBubble() {
@@ -61,32 +95,7 @@ class GlowBubble {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
     this.ctx.fill();
-  }
-
-  private getRandomValue(valueType: RandomValueT): number {
-    if (valueType === "width") {
-      return getRandomNumberBetween(
-        -this.stageRange,
-        this.stageWidth + this.stageRange,
-        true
-      );
-    } else if (valueType === "height") {
-      return getRandomNumberBetween(
-        -this.stageRange,
-        this.stageWidth + this.stageRange,
-        true
-      );
-    } else if (valueType === "velocity") {
-      return getRandomNumberBetween(-0.5, 0.5, false);
-    } else if (valueType === "radius") {
-      return getRandomNumberBetween(
-        this.radiusLimit.min,
-        this.radiusLimit.max,
-        true
-      );
-    } else {
-      return 0;
-    }
+    this.ctx.closePath();
   }
 
   private moveConstantly() {
@@ -103,19 +112,54 @@ class GlowBubble {
       this.vy *= -1;
     }
 
+    if (
+      this.radius >= this.radiusLimit.max ||
+      this.radius <= this.radiusLimit.min
+    ) {
+      this.vr *= -1;
+    }
+
     this.x += this.vx;
     this.y += this.vy;
+    this.radius += this.vr;
   }
 
-  private bounceOff() {}
+  private appearing() {
+    this.x += this.initVX;
+    this.y += this.initVY;
 
-  private appear() {}
+    setTimeout(() => {
+      this.animationStarted = true;
+    }, 2000);
+  }
 
-  private disappear() {}
+  private getRandomInitialCoor(r: number): IGetRandomInitialCoor {
+    const xPosFirst = getRandomBoolean();
 
-  private changeColorTo() {}
+    if (xPosFirst) {
+      const xPos = getRandomNumberBetween(-r - 1, this.stageWidth + r - 1);
+      const isLeft = xPos < this.stageWidth / 2;
+      const isUp = getRandomBoolean();
 
-  private startAnimation() {}
+      return {
+        x: xPos,
+        y: isUp ? -r : this.stageHeight + r,
+        direction:
+          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4,
+      };
+    } else {
+      const yPos = getRandomNumberBetween(-r - 1, this.stageHeight + r - 1);
+      const isUp = yPos < this.stageHeight / 2;
+      const isLeft = getRandomBoolean();
+
+      return {
+        x: isLeft ? -r : this.stageWidth + r,
+        y: yPos,
+        direction:
+          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4,
+      };
+    }
+  }
 }
 
 export default GlowBubble;

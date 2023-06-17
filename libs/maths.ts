@@ -77,3 +77,23 @@ export const calculateFarthest = (
     };
   }
 };
+
+export const getRandomNumber = (max: number, floor?: boolean): number => {
+  return floor ? Math.floor(Math.random() * max) : Math.random() * max;
+};
+
+export const getRandomNumberBetween = (
+  min: number,
+  max: number,
+  floor?: boolean
+): number => {
+  const randomN = floor
+    ? Math.floor(Math.random() * (max - min) + min)
+    : Math.random() * (max - min) + min;
+
+  return randomN;
+};
+
+export const getRandomBoolean = (): boolean => {
+  return Math.random() <= 0.5 ? true : false;
+};
