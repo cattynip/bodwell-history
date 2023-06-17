@@ -6,6 +6,7 @@ const nextConfig = {
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+  transpilePackages: ["@nindaff/leonsans"],
 };
 
 module.exports = nextConfig;
