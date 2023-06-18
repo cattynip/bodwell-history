@@ -4,7 +4,7 @@ import GlowBubble from "./GlowBubble";
 type RandomValueT = "width" | "height" | "radius" | "velocity";
 export type PositionCoor = { x: number; y: number };
 export type ColorT = `#${string}`;
-type ThemeT = "dark" | "purple" | "blue" | "colorful" | "cmiscm";
+export type ThemeT = "dark" | "purple" | "blue" | "colorful" | "cmiscm";
 export type MinMaxT<T = number> = { min: T; max: T };
 
 type IColors = {
@@ -122,7 +122,7 @@ class GlowCanvas {
         true
       );
     } else if (valueType === "velocity") {
-      return getRandomNumberBetween(-2, 2, false);
+      return getRandomNumberBetween(-1.2, 1.2, false);
     } else if (valueType === "radius") {
       return getRandomNumberBetween(
         this.radiusLimit.min,

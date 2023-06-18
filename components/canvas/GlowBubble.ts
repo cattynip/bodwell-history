@@ -74,7 +74,7 @@ class GlowBubble {
     if (this.animationStarted) {
       this.moveConstantly();
     } else {
-      this.appearing();
+      this.appearing(3000);
     }
   }
 
@@ -124,13 +124,13 @@ class GlowBubble {
     this.radius += this.vr;
   }
 
-  private appearing() {
+  private appearing(delay: number) {
     this.x += this.initVX;
     this.y += this.initVY;
 
     setTimeout(() => {
       this.animationStarted = true;
-    }, 2000);
+    }, delay);
   }
 
   private getRandomInitialCoor(r: number): IGetRandomInitialCoor {

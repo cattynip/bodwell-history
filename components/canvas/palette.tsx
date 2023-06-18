@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import GlowCanvas from "./GlowCanvas";
+import GlowCanvas, { ThemeT } from "./GlowCanvas";
 import { useRouter } from "next/router";
 
-const Palette = () => {
+interface IPaletteProps {
+  theme: ThemeT;
+}
+
+const Palette = ({ theme }: IPaletteProps) => {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -12,7 +16,7 @@ const Palette = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const Glow = new GlowCanvas(canvas, ctx, "cmiscm");
+    const Glow = new GlowCanvas(canvas, ctx, theme);
 
     setTimeout(() => {
       Glow.startScene();
