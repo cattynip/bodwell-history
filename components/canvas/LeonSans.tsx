@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Texts from "./Texts";
 
 interface IComponentProps {
-  text: string;
+  text: string[];
 }
 
 const LeonSans = ({ text }: IComponentProps) => {
@@ -14,7 +14,40 @@ const LeonSans = ({ text }: IComponentProps) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const Text = new Texts(canvas, ctx, text);
+    const Text = new Texts(canvas, ctx, [
+      {
+        text: "Bodwell High is a good place.",
+        deleteMethod: "erasing",
+        timeInfo: {
+          delay: 2000,
+          writing: 2000,
+          showing: 3000,
+          deleting: 2000,
+        },
+      },
+      {
+        text: "Until Jinwoo Jang exists.",
+        deleteMethod: "once",
+        timeInfo: {
+          delay: 2000,
+          writing: 2000,
+          showing: 3000,
+          deleting: 2000,
+        },
+      },
+      {
+        text: "Blabla.",
+        deleteMethod: "once",
+        timeInfo: {
+          delay: 1000,
+          writing: 200,
+          showing: 200,
+          deleting: 200,
+        },
+      },
+    ]);
+
+    Text.startAnimation();
   }, []);
 
   return <canvas ref={canvasRef} className="bg-black rounded-xl z-20" />;
