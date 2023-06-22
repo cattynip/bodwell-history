@@ -21,12 +21,6 @@ export type sizePair<T = number> = { width: T; height: T };
 export type pointT = "leftTop" | "leftBottom" | "rightTop" | "rightBottom";
 export type rightLeftT = "right" | "left" | "middle";
 
-type PointI = {
-  [key in pointT]: number;
-} & {
-  [key: string]: number;
-};
-
 // 1. Button 과 Window 모두에 Event Listener 를 붙여 마우스의 움직임을 감지하고 애니메이션을 추가함
 // 2. Button 에서는 onMouseMove 함수추가하고, Window 에 Event Listener 를 붙여 "
 // 3. Window 에만 Event Listener 붙여 감지 및 움직임을 만듦.
@@ -172,6 +166,10 @@ const StartButton = () => {
       const isFillingOut =
         childRef.current.getBoundingClientRect().width / 2 >=
         pressingInfo.farthest.distance;
+
+      if (isFillingOut) {
+        btnScaleUp.set(200);
+      }
 
       setIsNextPage((prev) => ({
         ...prev,
