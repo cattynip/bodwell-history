@@ -1,5 +1,5 @@
 const BodwellInfo: IBodwellInfo = {
-  name: "Bodwell High School",
+  name: "Bodwell High School"
 };
 
 interface IBodwellInfo {

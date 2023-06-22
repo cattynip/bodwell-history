@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import GlowCanvas, { ThemeT } from "./GlowCanvas";
 import { useRouter } from "next/router";
 
@@ -21,10 +21,11 @@ const Palette = ({ theme }: IPaletteProps) => {
     setTimeout(() => {
       Glow.startScene();
     }, 2000);
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, [router]);
 
   return (
-    <canvas className="absolute top-0 left-0 -z-50 bg-mbg" ref={canvasRef} />
+    <canvas className="absolute left-0 top-0 -z-50 bg-mbg" ref={canvasRef} />
   );
 };
 

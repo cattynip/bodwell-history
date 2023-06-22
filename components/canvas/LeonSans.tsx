@@ -22,8 +22,8 @@ const LeonSans = ({ text }: IComponentProps) => {
           delay: 2000,
           writing: 2000,
           showing: 3000,
-          deleting: 2000,
-        },
+          deleting: 2000
+        }
       },
       {
         text: "Until Jinwoo Jang exists.",
@@ -32,8 +32,8 @@ const LeonSans = ({ text }: IComponentProps) => {
           delay: 2000,
           writing: 2000,
           showing: 3000,
-          deleting: 2000,
-        },
+          deleting: 2000
+        }
       },
       {
         text: "Blabla.",
@@ -42,15 +42,15 @@ const LeonSans = ({ text }: IComponentProps) => {
           delay: 1000,
           writing: 200,
           showing: 200,
-          deleting: 200,
-        },
-      },
+          deleting: 200
+        }
+      }
     ]);
 
     Text.startAnimation();
   }, []);
 
-  return <canvas ref={canvasRef} className="bg-black rounded-xl z-20" />;
+  return <canvas ref={canvasRef} className="z-20 rounded-xl bg-black" />;
 };
 
 export default LeonSans;

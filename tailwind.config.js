@@ -14,11 +14,11 @@ const tailwindCSSConfig = {
         bss: "#1D267D",
         bst: "#5C469C",
         bsp: "#D4ADFC",
-        mbg: "#303030",
-      },
-    },
+        mbg: "#303030"
+      }
+    }
   },
-  plugins: [],
+  plugins: []
 };
 
 module.exports = tailwindCSSConfig;

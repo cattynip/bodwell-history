@@ -4,7 +4,7 @@ const Top = () => {
   return (
     <div className="flex flex-col items-center justify-between space-y-10">
       <TopLogo />
-      <h1 className="font-bold text-5xl flex items-center justify-between text-center px-3">
+      <h1 className="flex items-center justify-between px-3 text-center text-5xl font-bold">
         BODWELL HISTORY
       </h1>
     </div>

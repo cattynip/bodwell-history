@@ -36,7 +36,7 @@ class GlowCanvas {
     this.animationRequest = 0;
     this.radiusLimit = {
       min: 400,
-      max: 900,
+      max: 900
     };
 
     this.COLORSSET = {
@@ -44,7 +44,7 @@ class GlowCanvas {
       purple: ["#A020F0", "#F020F0", "#D00FFF"],
       blue: ["#0000FF", "#01A2FF", "#0FADFF", "#0201FF"],
       colorful: ["#FF0000", "#00FF00", "#0000FF"],
-      cmiscm: ["#2D4AE3", "#FAFF59", "#FF68F8", "#2CD1FC", "#36E954"],
+      cmiscm: ["#2D4AE3", "#FAFF59", "#FF68F8", "#2CD1FC", "#36E954"]
     };
 
     this.init();
@@ -61,7 +61,7 @@ class GlowCanvas {
   private animate() {
     this.clear();
 
-    this.glowBubbleList.map((value) => value.animate());
+    this.glowBubbleList.map(value => value.animate());
 
     this.animationRequest = requestAnimationFrame(this.animate.bind(this));
   }
@@ -94,11 +94,11 @@ class GlowCanvas {
         {
           x: this.getRandomValue("velocity"),
           y: this.getRandomValue("velocity"),
-          r: this.getRandomValue("velocity"),
+          r: this.getRandomValue("velocity")
         },
         {
           min: 400,
-          max: 900,
+          max: 900
         }
       );
 

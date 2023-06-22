@@ -4,9 +4,9 @@ const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
   },
-  transpilePackages: ["@nindaff/leonsans"],
+  transpilePackages: ["@nindaff/leonsans"]
 };
 
 module.exports = nextConfig;

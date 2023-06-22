@@ -15,7 +15,7 @@ const Anchor = ({
     <Link passHref legacyBehavior {...props}>
       <a
         target={target ? target : "_self"}
-        className="transition-all focus:outline-none focus:-translate-y-0.5 hover:-translate-y-0.5"
+        className="transition-all hover:-translate-y-0.5 focus:-translate-y-0.5 focus:outline-none"
       >
         {children}
       </a>

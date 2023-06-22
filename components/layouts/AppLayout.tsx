@@ -69,7 +69,7 @@ const AppLayout = ({ children }: IAppLayout) => {
         />
       </Head>
 
-      <div className="mx-auto w-full h-[100vh] text-gray-950">{children}</div>
+      <div className="mx-auto h-[100vh] w-full text-gray-950">{children}</div>
     </>
   );
 };

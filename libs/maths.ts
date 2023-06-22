@@ -26,7 +26,7 @@ export const calculateHover = ({
   moveYPosFn,
   cursorXPos,
   cursorYPos,
-  btnLimit,
+  btnLimit
 }: IAnimateHoverProps): void | boolean => {
   if (
     x <= btnLimit.first.x ||
@@ -63,17 +63,17 @@ export const calculateFarthest = (
   if (clickingPos.x < window.innerWidth / 2) {
     return {
       direction: "left",
-      distance: pythagoras(window.innerWidth - clickingPos.x, clickingPos.y),
+      distance: pythagoras(window.innerWidth - clickingPos.x, clickingPos.y)
     };
   } else if (clickingPos.x > window.innerWidth / 2) {
     return {
       direction: "right",
-      distance: pythagoras(clickingPos.x, clickingPos.y),
+      distance: pythagoras(clickingPos.x, clickingPos.y)
     };
   } else {
     return {
       direction: "middle",
-      distance: pythagoras(clickingPos.x, clickingPos.y),
+      distance: pythagoras(clickingPos.x, clickingPos.y)
     };
   }
 };

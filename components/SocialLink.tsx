@@ -32,27 +32,27 @@ export const SocialLinkAnchor = ({
     <motion.div
       initial={{
         y: -20,
-        opacity: 0,
+        opacity: 0
       }}
       animate={{
         y: 0,
-        opacity: 1,
+        opacity: 1
       }}
       transition={{
-        delay: (delay / 1000) * 100,
+        delay: (delay / 1000) * 100
       }}
       exit={{
         y: 20,
         opacity: 0,
         transition: {
-          duration: 0.2,
-        },
+          duration: 0.2
+        }
       }}
       className="flex flex-col items-center justify-center"
     >
       <Anchor href={url} target="_blank">
         <div
-          className={`border-[0.08em] border-black p-3 rounded-full transition-colors bg-transparent hover:bg-black w-min mx-auto cursor-pointer ${
+          className={`mx-auto w-min cursor-pointer rounded-full border-[0.08em] border-black bg-transparent p-3 transition-colors hover:bg-black ${
             extraClassname ? extraClassname : ""
           }`}
           onMouseEnter={() => setIsHovered(true)}
@@ -85,7 +85,7 @@ export const TypeToIcon = ({
     return (
       <BsYoutube
         color={color}
-        className="translate-y-[1px] translate-x-[1px]"
+        className="translate-x-[1px] translate-y-[1px]"
         {...props}
       />
     );

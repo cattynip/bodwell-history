@@ -145,7 +145,7 @@ class GlowBubble {
         x: xPos,
         y: isUp ? -r : this.stageHeight + r,
         direction:
-          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4,
+          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4
       };
     } else {
       const yPos = getRandomNumberBetween(-r - 1, this.stageHeight + r - 1);
@@ -156,7 +156,7 @@ class GlowBubble {
         x: isLeft ? -r : this.stageWidth + r,
         y: yPos,
         direction:
-          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4,
+          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4
       };
     }
   }

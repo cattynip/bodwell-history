@@ -4,14 +4,14 @@ import {
   useCallback,
   useEffect,
   useRef,
-  useState,
+  useState
 } from "react";
 import {
   AnimatePresence,
   SpringOptions,
   motion,
   useMotionValue,
-  useSpring,
+  useSpring
 } from "framer-motion";
 import { useRouter } from "next/router";
 import { IBtnLimitProps, calculateFarthest, calculateHover } from "@libs/maths";
@@ -43,14 +43,14 @@ const StartButton = () => {
   const btnLimitRange = 15;
   const [btnLimit, setBtnLimit] = useState<IBtnLimitProps>({
     first: { x: 0, y: 0 },
-    second: { x: 0, y: 0 },
+    second: { x: 0, y: 0 }
   });
 
   const btnScaleUp = useMotionValue(1);
   const btnScaleUpSpringConfig: SpringOptions = {
     damping: 100,
     bounce: 5,
-    stiffness: 800,
+    stiffness: 800
   };
   const btnScaleUpSpring = useSpring(btnScaleUp, btnScaleUpSpringConfig);
   const btnScaleUpRatio = 5;
@@ -68,8 +68,8 @@ const StartButton = () => {
     farthest: false,
     coor: {
       x: 0,
-      y: 0,
-    },
+      y: 0
+    }
   });
 
   const cursorX = useMotionValue(0);
@@ -78,7 +78,7 @@ const StartButton = () => {
   const animationConfig: SpringOptions = {
     damping: 300,
     stiffness: 1500,
-    mass: 10,
+    mass: 10
   };
   const cursorXSpring = useSpring(cursorX, animationConfig);
   const cursorYSpring = useSpring(cursorY, animationConfig);
@@ -87,7 +87,7 @@ const StartButton = () => {
     mouseUp: boolean;
   }>({
     dragging: false,
-    mouseUp: false,
+    mouseUp: false
   });
 
   const goToNextPage = () => {
@@ -130,7 +130,7 @@ const StartButton = () => {
         },
         cursorXPos,
         cursorYPos,
-        btnLimit,
+        btnLimit
       });
     },
     [cursorX, cursorY, getIsNextPage, btnLimit]
@@ -171,9 +171,9 @@ const StartButton = () => {
         btnScaleUp.set(200);
       }
 
-      setIsNextPage((prev) => ({
+      setIsNextPage(prev => ({
         ...prev,
-        dragging: isFillingOut,
+        dragging: isFillingOut
       }));
     }
   };
@@ -185,7 +185,7 @@ const StartButton = () => {
     // Get the farthest;
     const farthest = calculateFarthest({
       x: event.clientX,
-      y: event.clientY,
+      y: event.clientY
     });
 
     setPressingInfo({
@@ -193,13 +193,13 @@ const StartButton = () => {
       farthest,
       coor: {
         x: event.clientX,
-        y: event.clientY,
-      },
+        y: event.clientY
+      }
     });
 
-    setIsNextPage((prev) => ({
+    setIsNextPage(prev => ({
       ...prev,
-      mouseUp: false,
+      mouseUp: false
     }));
   };
 
@@ -209,12 +209,12 @@ const StartButton = () => {
       setPressingInfo({
         pressed: false,
         farthest: false,
-        coor: false,
+        coor: false
       });
       if (isNextPage.dragging) {
-        setIsNextPage((prev) => ({
+        setIsNextPage(prev => ({
           ...prev,
-          mouseUp: true,
+          mouseUp: true
         }));
       }
     },
@@ -237,7 +237,7 @@ const StartButton = () => {
 
     setBtnLimit({
       first: { x: left, y: top },
-      second: { x: right, y: bottom },
+      second: { x: right, y: bottom }
     });
   }, []);
 
@@ -257,7 +257,7 @@ const StartButton = () => {
     animateBtn,
     animateBtnWithEvent,
     onBtnMouseUp,
-    setLimit,
+    setLimit
   ]);
 
   useEffect(() => {
@@ -276,11 +276,11 @@ const StartButton = () => {
     <AnimatePresence>
       <div
         ref={parentRef}
-        className="w-28 h-28 flex items-center justify-center border border-gray-500 rounded-full cursor-pointer"
+        className="flex h-28 w-28 cursor-pointer items-center justify-center rounded-full border border-gray-500"
       >
         <motion.div
           ref={childRef}
-          className="w-24 h-24 bg-mbg rounded-full"
+          className="h-24 w-24 rounded-full bg-mbg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onMouseDown={onBtnMouseDown}
@@ -289,7 +289,7 @@ const StartButton = () => {
           style={{
             translateX: cursorXSpring,
             translateY: cursorYSpring,
-            scale: btnScaleUpSpring,
+            scale: btnScaleUpSpring
           }}
         />
       </div>
