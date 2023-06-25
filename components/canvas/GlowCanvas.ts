@@ -4,7 +4,13 @@ import GlowBubble from "./GlowBubble";
 type RandomValueT = "width" | "height" | "radius" | "velocity";
 export type PositionCoor = { x: number; y: number };
 export type ColorT = `#${string}`;
-export type ThemeT = "dark" | "purple" | "blue" | "colorful" | "cmiscm";
+export type ThemeT =
+  | "dark"
+  | "darkBlue"
+  | "purple"
+  | "blue"
+  | "colorful"
+  | "cmiscm";
 export type MinMaxT<T = number> = { min: T; max: T };
 
 type IColors = {
@@ -32,7 +38,7 @@ class GlowCanvas {
     this.theme = mode;
     this.stageRange = 100;
     this.glowBubbleList = [];
-    this.maxGlowBubblesNum = 30;
+    this.maxGlowBubblesNum = 15;
     this.animationRequest = 0;
     this.radiusLimit = {
       min: 400,
@@ -41,6 +47,7 @@ class GlowCanvas {
 
     this.COLORSSET = {
       dark: ["#000000", "#A00030", "#200202", "#102003", "#010230"],
+      darkBlue: ["#261C2C", "#0C4271", "#000000", "#1D1B38", "#0900C3"],
       purple: ["#A020F0", "#F020F0", "#D00FFF"],
       blue: ["#0000FF", "#01A2FF", "#0FADFF", "#0201FF"],
       colorful: ["#FF0000", "#00FF00", "#0000FF"],
