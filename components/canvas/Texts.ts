@@ -10,10 +10,10 @@ interface IWaitingTimes<T = number> {
   deleting: T;
 }
 
-interface TextInfo {
+export interface TextInfo {
   text: string;
-  deleteMethod: DeleteMethodT;
-  timeInfo: IWaitingTimes;
+  deleteMethod?: DeleteMethodT;
+  timeInfo?: IWaitingTimes;
   style?: LeonSansOptions;
 }
 
@@ -30,6 +30,7 @@ class Texts {
   private content: TextInfo[];
   private currentContent: TextInfo;
   private currentLeon: LeonSans;
+  private defaultTimeInfo: IWaitingTimes;
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -39,6 +40,12 @@ class Texts {
     this.canvas = canvas;
     this.ctx = ctx;
     this.content = content;
+    this.defaultTimeInfo = {
+      delay: 500,
+      showing: 1000,
+      writing: 1000,
+      deleting: 1000
+    };
 
     this.pixelRatio = 2;
     canvas.width = 800 * this.pixelRatio;
@@ -60,19 +67,19 @@ class Texts {
       this.currentContent = this.content[i];
       this.currentLeon = new LeonSans(this.getLeonSansOption());
       this.maintainingTransparent();
+      const timeInfo: IWaitingTimes = this.currentContent.timeInfo
+        ? this.currentContent.timeInfo
+        : this.defaultTimeInfo;
 
-      await this.waitFor(this.currentContent.timeInfo.delay);
+      await this.waitFor(timeInfo.delay);
 
-      this.processWriting();
+      this.processWriting(timeInfo.writing);
 
-      await this.waitFor(
-        this.currentContent.timeInfo.writing +
-          this.currentContent.timeInfo.showing
-      );
+      await this.waitFor(timeInfo.writing + timeInfo.showing);
 
-      this.processDeleting();
+      this.processDeleting(timeInfo.deleting);
 
-      await this.waitFor(this.currentContent.timeInfo.deleting);
+      await this.waitFor(timeInfo.deleting);
     }
   }
 
@@ -80,7 +87,7 @@ class Texts {
     return new Promise(resolve => setTimeout(resolve, t));
   }
 
-  private processWriting() {
+  private processWriting(duration: number) {
     for (let i = 0; i < this.currentContent["text"].length; i++) {
       let letterInfo = {
         prop: 0
@@ -93,9 +100,11 @@ class Texts {
         prop: 1,
         round: 100,
         easing: "easeOutQuart",
-        duration: this.currentContent.timeInfo.writing,
+        duration,
         delay,
         update: () => {
+          if (!this.currentLeon.data[i]) return;
+
           // @ts-ignore
           this.currentLeon.data[i].drawing.value = letterInfo.prop;
         }
@@ -103,7 +112,7 @@ class Texts {
     }
   }
 
-  private processDeleting() {
+  private processDeleting(duration: number) {
     for (let i = 0; i < this.currentContent["text"].length; i++) {
       let letterInfo = {
         prop: 1
@@ -116,7 +125,7 @@ class Texts {
         prop: 0,
         round: 100,
         easing: "easeOutQuart",
-        duration: this.currentContent.timeInfo.deleting,
+        duration,
         delay,
         update: () => {
           if (!this.currentLeon.data[i]) return;
@@ -132,6 +141,8 @@ class Texts {
     if (!this.currentContent) return;
 
     for (let i = 0; i < this.currentContent["text"].length; i++) {
+      if (!this.currentLeon.data[i]) return;
+
       // @ts-ignore
       this.currentLeon.data[i].drawing.value = 0;
     }
@@ -143,7 +154,7 @@ class Texts {
       size: 25,
       weight: 300,
       align: "center",
-      maxWidth: 30
+      maxWidth: 100
     };
 
     const style: LeonSansOptions = this.currentContent.style
