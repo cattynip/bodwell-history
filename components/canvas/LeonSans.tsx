@@ -17,6 +17,7 @@ const LeonSans = ({ text }: IComponentProps) => {
     const Text = new Texts(canvas, ctx, text);
 
     Text.startAnimation();
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, []);
 
   return <canvas ref={canvasRef} className="z-20 rounded-xl bg-black" />;

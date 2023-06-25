@@ -35,12 +35,16 @@ export type rightLeftT = "right" | "left" | "middle";
 // 1. Start Button 이 window size 가 바뀔때마다 작동이 잘 되지 않는 문제가 있었음
 // 2. Window 에 Resize 라는 Event Listener 를 붙여 Hover Liimt 를 계속 window size 가 바뀔때마다 업데이토록 고침으로써 해결
 
+// 1. Framer Motion 이 마우스가 Window 에 움직일때마다 쓸때없이 계속해서 계산하는 문제가 있었음.
+//    - 이것이 문제가 되지는 않지만, Performace 문제가 많이 나왔음.
+// 2. 이 문제를 눈으로만 보이는 Start Button 보다 더 큰 부모 DOM Element 를 만들어서 그곳에 마우스 따라가게 만듦으로써 문제 해결
+//    - 이로써 Limit Range 를 없에도 되었음
+
 const StartButton = () => {
   const router = useRouter();
   const parentRef = useRef<HTMLDivElement>(null);
   const childRef = useRef<HTMLDivElement>(null);
 
-  const btnLimitRange = 15;
   const [btnLimit, setBtnLimit] = useState<IBtnLimitProps>({
     first: { x: 0, y: 0 },
     second: { x: 0, y: 0 }
@@ -224,16 +228,10 @@ const StartButton = () => {
   const setLimit = useCallback(() => {
     if (!parentRef.current) return;
 
-    const left = parentRef.current.offsetLeft - btnLimitRange;
-    const top = parentRef.current.offsetTop - btnLimitRange;
-    const right =
-      parentRef.current.offsetLeft +
-      parentRef.current.clientWidth +
-      btnLimitRange;
-    const bottom =
-      parentRef.current.offsetTop +
-      parentRef.current.clientHeight +
-      btnLimitRange;
+    const left = parentRef.current.offsetLeft;
+    const top = parentRef.current.offsetTop;
+    const right = parentRef.current.offsetLeft + parentRef.current.clientWidth;
+    const bottom = parentRef.current.offsetTop + parentRef.current.clientHeight;
 
     setBtnLimit({
       first: { x: left, y: top },
@@ -242,13 +240,18 @@ const StartButton = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener("mousemove", animateBtnWithEvent);
-    window.addEventListener("mouseup", onBtnMouseUp);
+    if (!parentRef || !parentRef.current) return;
+
+    parentRef.current.addEventListener("mousemove", animateBtnWithEvent);
+    parentRef.current.addEventListener("mouseup", onBtnMouseUp);
     window.addEventListener("resize", setLimit);
 
     return () => {
-      window.removeEventListener("mousemove", animateBtnWithEvent);
-      window.removeEventListener("mouseup", onBtnMouseUp);
+      if (!parentRef || !parentRef.current) return;
+
+      parentRef.current.removeEventListener("mousemove", animateBtnWithEvent);
+      /* eslint-disable react-hooks/exhaustive-deps */
+      parentRef.current.removeEventListener("mouseup", onBtnMouseUp);
       window.removeEventListener("resize", setLimit);
     };
   }, [
@@ -276,22 +279,24 @@ const StartButton = () => {
     <AnimatePresence>
       <div
         ref={parentRef}
-        className="flex h-28 w-28 cursor-pointer items-center justify-center rounded-full border border-gray-500"
+        className="flex h-36 w-36 items-center justify-center"
       >
-        <motion.div
-          ref={childRef}
-          className="h-24 w-24 rounded-full bg-mbg"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          onMouseDown={onBtnMouseDown}
-          onMouseUp={onBtnMouseUp}
-          onMouseMove={onBtnDragged}
-          style={{
-            translateX: cursorXSpring,
-            translateY: cursorYSpring,
-            scale: btnScaleUpSpring
-          }}
-        />
+        <div className="flex h-28 w-28 cursor-pointer items-center justify-center rounded-full border border-gray-500">
+          <motion.div
+            ref={childRef}
+            className="h-24 w-24 rounded-full bg-mbg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onMouseDown={onBtnMouseDown}
+            onMouseUp={onBtnMouseUp}
+            onMouseMove={onBtnDragged}
+            style={{
+              translateX: cursorXSpring,
+              translateY: cursorYSpring,
+              scale: btnScaleUpSpring
+            }}
+          />
+        </div>
       </div>
     </AnimatePresence>
   );
