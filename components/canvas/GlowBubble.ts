@@ -22,6 +22,7 @@ class GlowBubble {
   private color: ColorT;
   private x: number;
   private y: number;
+  private initVV: number;
   private initVX: number;
   private initVY: number;
   private vx: number;
@@ -53,29 +54,35 @@ class GlowBubble {
     this.vy = velocityInfo.y;
     this.vr = velocityInfo.r;
 
+    this.initVV = 2;
+
     if (initialCoor.direction <= 2) {
-      this.initVY = 2;
+      this.initVY = this.initVV;
     } else {
-      this.initVY = -2;
+      this.initVY = -this.initVV;
     }
 
     if (initialCoor.direction === 1 || initialCoor.direction === 4) {
-      this.initVX = -2;
+      this.initVX = -this.initVV;
     } else {
-      this.initVX = 2;
+      this.initVX = this.initVV;
     }
 
     this.animationStarted = false;
   }
 
-  public animate() {
+  public animate(t?: DOMHighResTimeStamp) {
     this.drawBubble();
 
     if (this.animationStarted) {
       this.moveConstantly();
     } else {
-      this.appearing(3000);
+      this.appearing(t);
     }
+  }
+
+  public resize() {
+    console.log("Window has been resized.");
   }
 
   private drawBubble() {
@@ -124,13 +131,14 @@ class GlowBubble {
     this.radius += this.vr;
   }
 
-  private appearing(delay: number) {
+  private appearing(t?: DOMHighResTimeStamp) {
     this.x += this.initVX;
     this.y += this.initVY;
 
-    setTimeout(() => {
+    if (t && t > 5000) {
+      console.log("STOP");
       this.animationStarted = true;
-    }, delay);
+    }
   }
 
   private getRandomInitialCoor(r: number): IGetRandomInitialCoor {

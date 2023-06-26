@@ -65,10 +65,10 @@ class GlowCanvas {
     this.ctx.globalCompositeOperation = "saturation";
   }
 
-  private animate() {
+  private animate(t?: DOMHighResTimeStamp) {
     this.clear();
 
-    this.glowBubbleList.map(value => value.animate());
+    this.glowBubbleList.map(value => value.animate(t));
 
     this.animationRequest = requestAnimationFrame(this.animate.bind(this));
   }
@@ -80,8 +80,9 @@ class GlowCanvas {
   private resize() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
-    this.glowBubbleList = [];
     this.init();
+
+    this.glowBubbleList.map(value => value.resize());
 
     if (this.animationRequest) {
       cancelAnimationFrame(this.animationRequest);
