@@ -27,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AppLayout>
       <Component {...pageProps} />
-      {isBackgroundDisplayed && <Palette theme="darkBlue" />}
+      {isBackgroundDisplayed && <Palette theme="blue" />}
     </AppLayout>
   );
 }

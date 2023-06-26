@@ -1,16 +1,6 @@
-import { getRandomBoolean, getRandomNumberBetween } from "@libs/maths";
-import { ColorT, MinMaxT, PositionCoor } from "./GlowCanvas";
-
-/*
- * TODO: Change its color with animation.
- * TODO: Appear from outside of the canvas into somewhere in the canvas and move constantly.
- */
-
-type QuadrantT = 1 | 2 | 3 | 4;
-
-interface IGetRandomInitialCoor extends PositionCoor {
-  direction: QuadrantT;
-}
+import { getRandomNumberBetween } from "@libs/maths";
+import { ColorT, MinMaxT } from "./GlowCanvas";
+import { coordinatePair } from "@components/StartButton";
 
 class GlowBubble {
   private ctx: CanvasRenderingContext2D;
@@ -20,11 +10,9 @@ class GlowBubble {
   private radiusLimit: MinMaxT;
   private radius: number;
   private color: ColorT;
+  private alpha: number;
   private x: number;
   private y: number;
-  private initVV: number;
-  private initVX: number;
-  private initVY: number;
   private vx: number;
   private vy: number;
   private vr: number;
@@ -46,38 +34,24 @@ class GlowBubble {
     this.radiusLimit = radiusLimit;
     this.radius = initialRadius;
     this.color = color;
+    this.alpha = 0;
 
-    const initialCoor = this.getRandomInitialCoor(this.radius);
+    const initialCoor = this.getRandomInitialCoor();
     this.x = initialCoor.x;
     this.y = initialCoor.y;
     this.vx = velocityInfo.x;
     this.vy = velocityInfo.y;
     this.vr = velocityInfo.r;
 
-    this.initVV = 2;
-
-    if (initialCoor.direction <= 2) {
-      this.initVY = this.initVV;
-    } else {
-      this.initVY = -this.initVV;
-    }
-
-    if (initialCoor.direction === 1 || initialCoor.direction === 4) {
-      this.initVX = -this.initVV;
-    } else {
-      this.initVX = this.initVV;
-    }
-
     this.animationStarted = false;
   }
 
-  public animate(t?: DOMHighResTimeStamp) {
+  public animate() {
     this.drawBubble();
+    this.moveConstantly();
 
-    if (this.animationStarted) {
-      this.moveConstantly();
-    } else {
-      this.appearing(t);
+    if (!this.animationStarted) {
+      this.appearing();
     }
   }
 
@@ -99,10 +73,22 @@ class GlowBubble {
     gradient.addColorStop(1, this.color + "00");
 
     this.ctx.fillStyle = gradient;
+    this.ctx.globalAlpha = this.alpha;
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
     this.ctx.fill();
+
+    // this.helper();
+
     this.ctx.closePath();
+  }
+
+  private helper() {
+    this.ctx.strokeStyle = "red";
+    this.ctx.lineWidth = 7;
+    this.ctx.moveTo(this.stageWidth / 2, this.stageHeight / 2);
+    this.ctx.lineTo(this.x, this.y);
+    this.ctx.stroke();
   }
 
   private moveConstantly() {
@@ -131,42 +117,22 @@ class GlowBubble {
     this.radius += this.vr;
   }
 
-  private appearing(t?: DOMHighResTimeStamp) {
-    this.x += this.initVX;
-    this.y += this.initVY;
+  private appearing() {
+    this.alpha += 0.002;
 
-    if (t && t > 5000) {
-      console.log("STOP");
+    if (this.alpha > 1) {
       this.animationStarted = true;
     }
   }
 
-  private getRandomInitialCoor(r: number): IGetRandomInitialCoor {
-    const xPosFirst = getRandomBoolean();
+  private getRandomInitialCoor(): coordinatePair {
+    const xPos = getRandomNumberBetween(0, this.stageWidth);
+    const yPos = getRandomNumberBetween(0, this.stageHeight);
 
-    if (xPosFirst) {
-      const xPos = getRandomNumberBetween(-r - 1, this.stageWidth + r - 1);
-      const isLeft = xPos < this.stageWidth / 2;
-      const isUp = getRandomBoolean();
-
-      return {
-        x: xPos,
-        y: isUp ? -r : this.stageHeight + r,
-        direction:
-          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4
-      };
-    } else {
-      const yPos = getRandomNumberBetween(-r - 1, this.stageHeight + r - 1);
-      const isUp = yPos < this.stageHeight / 2;
-      const isLeft = getRandomBoolean();
-
-      return {
-        x: isLeft ? -r : this.stageWidth + r,
-        y: yPos,
-        direction:
-          !isLeft && isUp ? 1 : isLeft && isUp ? 2 : isLeft && !isUp ? 3 : 4
-      };
-    }
+    return {
+      x: xPos,
+      y: yPos
+    };
   }
 }
 
