@@ -56,7 +56,12 @@ class GlowBubble {
   }
 
   public resize() {
-    console.log("Window has been resized.");
+    this.stageWidth = window.innerWidth;
+    this.stageHeight = window.innerHeight;
+
+    const initialCoor = this.getRandomInitialCoor();
+    this.x = initialCoor.x;
+    this.y = initialCoor.y;
   }
 
   private drawBubble() {
