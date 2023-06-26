@@ -1,21 +1,10 @@
-import LeonSans from "@components/canvas/LeonSans";
+import { NextPage } from "next";
 
-const Introduction = () => {
+const Introduction: NextPage = () => {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      {/* <LeonSans */}
-      {/*   text={[ */}
-      {/*     { */}
-      {/*       text: "We are trying to remember the history of Bodwell." */}
-      {/*     }, */}
-      {/*     { */}
-      {/*       text: "How have we been walking?\nWhat Histories, memories, and moments did we make?" */}
-      {/*     }, */}
-      {/*     { */}
-      {/*       text: "We will present you, our history with Pictures." */}
-      {/*     } */}
-      {/*   ]} */}
-      {/* /> */}
+    <div>
+      <h1>The Introduction Page</h1>
+      <p>This is the introduction page.</p>
     </div>
   );
 };
