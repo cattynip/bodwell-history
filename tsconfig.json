@@ -19,6 +19,7 @@
       "@components/*": ["./components/*"],
       "@styles/*": ["./styles/*"],
       "@libs/*": ["./libs/*"],
+      "@data/*": ["./data/*"],
       "@public/*": ["./public/*"]
     }
   },

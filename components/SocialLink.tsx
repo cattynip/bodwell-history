@@ -1,4 +1,4 @@
-import { SocialLinkType } from "@libs/dataManager";
+import { SocialLinkType } from "@data/links";
 import Anchor from "./Anchor";
 
 import { BsLink45Deg, BsTwitter, BsYoutube } from "react-icons/bs";
@@ -8,8 +8,7 @@ import { FaFacebookF } from "react-icons/fa";
 import { IconBaseProps } from "react-icons";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import ExpandableAnchor from "./ExpandableAnchor";
-import { link } from "fs";
+// import ExpandableAnchor from "./ExpandableAnchor";
 
 interface ISocialLinkAnchorProps {
   name: SocialLinkType;
