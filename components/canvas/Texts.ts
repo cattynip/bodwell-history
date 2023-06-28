@@ -112,14 +112,15 @@ class Texts {
 
       this.callbacks?.everyWriting && this.callbacks.everyWriting();
 
-      if (isLast) return;
+      if (isLast) {
+        this.callbacks?.whenCompleted && this.callbacks.whenCompleted();
+        return;
+      }
 
       this.processDeleting(this.timeInfo.deleting);
 
       await this.waitFor(this.timeInfo.deleting);
     }
-
-    this.callbacks?.whenCompleted && this.callbacks.whenCompleted();
   }
 
   private async waitFor(t: number) {
