@@ -1,10 +1,36 @@
 import Head from "next/head";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { setLocalLang } from "@components/languageProvider";
 
-interface IAppLayout {
+const Palette = dynamic(() => import("@components/canvas/palette"), {
+  ssr: true
+});
+
+export interface ILayoutProps {
   children: React.ReactNode;
 }
 
-const AppLayout = ({ children }: IAppLayout) => {
+const AppLayout = ({ children }: ILayoutProps) => {
+  const router = useRouter();
+  const [isBackgroundDisplayed, setIsBackgroundDisplayed] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    const showingBackground = router.pathname !== "/";
+
+    if (!showingBackground) {
+      setIsBackgroundDisplayed(false);
+    } else {
+      setIsBackgroundDisplayed(true);
+    }
+  }, [router]);
+
+  useEffect(() => {
+    setLocalLang();
+  }, []);
+
   return (
     <>
       <Head>
@@ -69,7 +95,11 @@ const AppLayout = ({ children }: IAppLayout) => {
         />
       </Head>
 
-      <div className="mx-auto h-[100vh] w-full text-gray-950">{children}</div>
+      <main>
+        <div className="mx-auto h-[100vh] w-full text-gray-950">{children}</div>
+
+        {isBackgroundDisplayed && <Palette theme="cmiscm" delay={10000} />}
+      </main>
     </>
   );
 };
