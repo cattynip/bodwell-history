@@ -1,5 +1,5 @@
 import Description from "@components/canvas/Description";
-import IntroductionLayout from "@components/layouts/IntroductionLayout";
+import BasicLayout from "@components/layouts/BasicLayout";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -9,13 +9,13 @@ const Introduction: NextPage = () => {
   const [nextPage, setNextPage] = useState<boolean>(false);
 
   useEffect(() => {
-    // if (nextPage) {
-    //   router.push("/memories/1991");
-    // }
+    if (nextPage) {
+      router.push("/memories/1991");
+    }
   }, [nextPage, router]);
 
   return (
-    <IntroductionLayout>
+    <BasicLayout>
       <Description
         text={[
           "We have been operating for 32 years.",
@@ -29,7 +29,7 @@ const Introduction: NextPage = () => {
           }, 3000);
         }}
       />
-    </IntroductionLayout>
+    </BasicLayout>
   );
 };
 
