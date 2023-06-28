@@ -1,8 +1,8 @@
 import { coordinatePair, rightLeftT } from "@components/StartButton";
 
-export const pythagoras = (x: number, y: number): number => {
+export function pythagoras(x: number, y: number): number {
   return Math.sqrt(x ** 2 + y ** 2);
-};
+}
 
 interface IAnimateHoverProps {
   x: number;
@@ -19,7 +19,7 @@ export interface IBtnLimitProps {
   second: coordinatePair;
 }
 
-export const calculateHover = ({
+export function calculateHover({
   x,
   y,
   moveXPosFn,
@@ -27,7 +27,7 @@ export const calculateHover = ({
   cursorXPos,
   cursorYPos,
   btnLimit
-}: IAnimateHoverProps): void | boolean => {
+}: IAnimateHoverProps): void | boolean {
   if (
     x <= btnLimit.first.x ||
     x >= btnLimit.second.x ||
@@ -55,11 +55,12 @@ export const calculateHover = ({
       }
     }
   }
-};
+}
 
-export const calculateFarthest = (
-  clickingPos: coordinatePair
-): { direction: rightLeftT; distance: number } => {
+export function calculateFarthest(clickingPos: coordinatePair): {
+  direction: rightLeftT;
+  distance: number;
+} {
   if (clickingPos.x < window.innerWidth / 2) {
     return {
       direction: "left",
@@ -76,24 +77,24 @@ export const calculateFarthest = (
       distance: pythagoras(clickingPos.x, clickingPos.y)
     };
   }
-};
+}
 
-export const getRandomNumber = (max: number, floor?: boolean): number => {
+export function getRandomNumber(max: number, floor?: boolean): number {
   return floor ? Math.floor(Math.random() * max) : Math.random() * max;
-};
+}
 
-export const getRandomNumberBetween = (
+export function getRandomNumberBetween(
   min: number,
   max: number,
   floor?: boolean
-): number => {
+): number {
   const randomN = floor
     ? Math.floor(Math.random() * (max - min) + min)
     : Math.random() * (max - min) + min;
 
   return randomN;
-};
+}
 
-export const getRandomBoolean = (): boolean => {
+export function getRandomBoolean(): boolean {
   return Math.random() <= 0.5 ? true : false;
-};
+}
