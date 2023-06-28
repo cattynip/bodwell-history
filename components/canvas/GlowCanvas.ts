@@ -130,7 +130,7 @@ class GlowCanvas {
         true
       );
     } else if (valueType === "velocity") {
-      return getRandomNumberBetween(-4, 4, false);
+      return getRandomNumberBetween(-1.5, 2, false);
     } else if (valueType === "radius") {
       return getRandomNumberBetween(
         this.radiusLimit.min,

@@ -3,9 +3,10 @@ import GlowCanvas, { ThemeT } from "./GlowCanvas";
 
 interface IPaletteProps {
   theme: ThemeT;
+  delay: number;
 }
 
-const Palette = ({ theme }: IPaletteProps) => {
+const Palette = ({ theme, delay }: IPaletteProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ const Palette = ({ theme }: IPaletteProps) => {
 
     setTimeout(() => {
       Glow.startScene();
-    }, 2000);
+    }, delay);
     /* eslint-disable react-hooks/exhaustive-deps */
   }, []);
 
