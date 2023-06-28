@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { setLocalLang } from "@components/languageProvider";
+import YearButton from "@components/YearButton";
 
 const Palette = dynamic(() => import("@components/canvas/palette"), {
   ssr: true
@@ -100,7 +101,10 @@ const AppLayout = ({ children }: ILayoutProps) => {
       </Head>
 
       <main>
-        <div className="mx-auto h-[100vh] w-full text-gray-950">{children}</div>
+        <div className="mx-auto h-[100vh] w-full text-gray-950">
+          <YearButton />
+          {children}
+        </div>
 
         {isBackgroundDisplayed && (
           <Palette theme="cmiscm" delay={isIntroductionRoute ? 10000 : 1000} />
