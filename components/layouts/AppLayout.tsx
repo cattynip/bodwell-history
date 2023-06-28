@@ -16,8 +16,12 @@ const AppLayout = ({ children }: ILayoutProps) => {
   const router = useRouter();
   const [isBackgroundDisplayed, setIsBackgroundDisplayed] =
     useState<boolean>(false);
+  const [isIntroductionRoute, setIsIntroductionRoute] = useState<boolean>(
+    router.pathname === "/introduction"
+  );
 
   useEffect(() => {
+    setIsIntroductionRoute(router.pathname === "/introduction");
     const showingBackground = router.pathname !== "/";
 
     if (!showingBackground) {
@@ -98,7 +102,9 @@ const AppLayout = ({ children }: ILayoutProps) => {
       <main>
         <div className="mx-auto h-[100vh] w-full text-gray-950">{children}</div>
 
-        {isBackgroundDisplayed && <Palette theme="cmiscm" delay={10000} />}
+        {isBackgroundDisplayed && (
+          <Palette theme="cmiscm" delay={isIntroductionRoute ? 10000 : 1000} />
+        )}
       </main>
     </>
   );
