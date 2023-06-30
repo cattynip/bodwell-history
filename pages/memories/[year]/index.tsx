@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 const Year: NextPage = () => {
   return (
-    <BasicLayout>
+    <BasicLayout hasYearButton>
       <div>{useRouter().query.year}</div>
     </BasicLayout>
   );

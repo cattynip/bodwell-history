@@ -15,7 +15,7 @@ const Introduction: NextPage = () => {
   }, [nextPage, router]);
 
   return (
-    <BasicLayout>
+    <BasicLayout hasYearButton={false}>
       <Description
         text={[
           "We have been operating for 32 years.",
