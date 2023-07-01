@@ -1,34 +1,16 @@
-import { useEffect } from "react";
-import Texts, { ICallback, defaultWaitingTimes } from "./Texts";
-import { AnimatePresence } from "framer-motion";
-import { LeonSansOptions } from "@nindaff/leonsans";
+import { useEffect, useState } from "react";
+import Texts, {
+  ICallback,
+  TCanvasShowingStyle,
+  defaultWaitingTimes
+} from "./Texts";
 import userLangInfo from "@components/languageProvider";
-import { motion } from "framer-motion";
-
-// type TBackgroundColourType = "black" | "white" | "blurred";
-// type TTextColourType = "white" | "black";
-type TCanvasShowingStyle = "quotes" | "description";
+import { debounce } from "lodash";
 
 interface IComponentProps {
   text: string[];
   canvasShowingStyle: TCanvasShowingStyle;
 }
-
-const QuoteStyle: LeonSansOptions = {
-  color: ["#FFFFFF"],
-  size: 25,
-  weight: 300,
-  align: "center",
-  maxWidth: 1
-};
-
-const DescriptionStyle: LeonSansOptions = {
-  color: ["#DDDDDD"],
-  size: 15,
-  weight: 300,
-  align: "right",
-  maxWidth: 600
-};
 
 const Description = ({
   text,
@@ -39,17 +21,33 @@ const Description = ({
 
   useEffect(() => {
     if (isLangEng) {
-      const globalStyle: LeonSansOptions =
-        canvasShowingStyle === "quotes" ? QuoteStyle : DescriptionStyle;
-
       const Text = new Texts({
         content: text,
-        globalStyle,
+        canvasShowingStyle,
         timeInfo: defaultWaitingTimes,
         callbacks: props
       });
 
-      Text.startAnimation();
+      Text.startAnimation(true);
+
+      const onResize = debounce(() => {
+        Text.disattach();
+
+        const NewText = new Texts({
+          content: text,
+          canvasShowingStyle,
+          timeInfo: defaultWaitingTimes,
+          callbacks: props
+        });
+
+        NewText.startAnimation(true);
+      }, 2000);
+
+      window.addEventListener("resize", onResize);
+
+      return () => {
+        window.removeEventListener("resize", onResize);
+      };
     }
 
     /* eslint-disable react-hooks/exhaustive-deps */
@@ -57,25 +55,18 @@ const Description = ({
 
   return (
     <div
-      className="w-full overflow-hidden rounded-md bg-black p-3 text-center text-white shadow-2xl"
+      className={`w-full overflow-hidden rounded-md p-3 text-center text-white shadow-2xl  ${
+        canvasShowingStyle === "quotes"
+          ? "bg-black"
+          : "border-[0.2px] border-gray-600 backdrop-blur-3xl"
+      }`}
       id="parent"
     >
       <div id="leonsans">
         <div id="sample">
-          <AnimatePresence>
-            <motion.div
-              initial={{
-                opacity: 1
-              }}
-              animate={{
-                opacity: 1
-              }}
-            >
-              {text.map((value, idx) => (
-                <p key={idx}>{value}</p>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+          {text.map((value, idx) => (
+            <p key={idx}>{value}</p>
+          ))}
         </div>
       </div>
     </div>
