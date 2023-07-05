@@ -51,8 +51,7 @@ const DescriptionStyle: LeonSansOptions = {
 };
 
 class Texts {
-  private parentElement: HTMLDivElement;
-  private mainElement: HTMLDivElement;
+  private parent: HTMLDivElement;
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private pixelRatio: number;
@@ -61,29 +60,28 @@ class Texts {
   private currentContent: string;
   private currentLeon: LeonSans;
   private globalStyle: LeonSansOptions;
-  private canvasStyle: TCanvasShowingStyle;
   private timeInfo: IWaitingTimes;
   private callbacks?: ICallback;
   private position: PositionCoor;
 
-  constructor({
-    content,
-    canvasShowingStyle,
-    timeInfo,
-    callbacks
-  }: ITextProps) {
-    this.canvas = document.createElement("canvas");
-    this.ctx = this.canvas.getContext("2d")!;
-    this.parentElement = document.querySelector(`#parent`)!;
-    this.mainElement = this.parentElement.querySelector("#leonsans")!;
+  constructor(
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    parent: HTMLDivElement,
+    { content, canvasShowingStyle, timeInfo, callbacks }: ITextProps
+  ) {
+    this.parent = parent;
+    this.canvas = canvas;
+    this.ctx = ctx;
     this.content = content;
 
-    this.canvasStyle = canvasShowingStyle;
     this.globalStyle =
       canvasShowingStyle === "quotes" ? QuoteStyle : DescriptionStyle;
     this.timeInfo = timeInfo;
 
     this.pixelRatio = 2;
+
+    this.ctx.scale(this.pixelRatio, this.pixelRatio);
 
     this.currentContent = this.content[0];
     this.currentLeon = new LeonSans({
@@ -94,33 +92,10 @@ class Texts {
     this.callbacks = callbacks;
 
     this.position = this.getPosition();
-    this.attach();
     this.animate();
   }
 
-  private attach() {
-    const exists = this.parentElement.querySelector("canvas");
-
-    if (!exists) {
-      this.mainElement.appendChild(this.canvas);
-      const sample = this.mainElement.querySelector("#sample");
-      sample?.remove();
-    }
-  }
-
-  public disattach() {
-    const exists = this.parentElement.querySelector("canvas");
-
-    if (exists) {
-      this.mainElement.removeChild(exists);
-      const sample = document.createElement("div");
-      sample.id = "sample";
-
-      this.mainElement.appendChild(sample);
-    }
-  }
-
-  public async startAnimation(noDelayMode: boolean) {
+  public async startAnimation() {
     this.maintainingTransparent();
 
     this.callbacks?.whenStarted && this.callbacks.whenStarted();
@@ -136,15 +111,20 @@ class Texts {
 
       this.position = this.getPosition();
 
-      if (!noDelayMode) {
-        await this.waitFor(this.timeInfo.delay);
-      }
+      await this.waitFor(this.timeInfo.delay);
 
       this.currentLeon.maxWidth =
-        this.mainElement.getBoundingClientRect().width - 10;
-      this.processWriting(this.timeInfo.writing);
+        this.canvas.getBoundingClientRect().width * this.pixelRatio;
 
-      this.changeHeight();
+      this.canvas.width = this.currentLeon.maxWidth;
+      this.canvas.height = this.currentLeon.rect.h * this.pixelRatio;
+
+      this.canvas.style.width = `${
+        this.canvas.getBoundingClientRect().width
+      }px`;
+      this.canvas.style.height = `${this.currentLeon.rect.h}px`;
+
+      this.processWriting(this.timeInfo.writing);
 
       await this.waitFor(this.timeInfo.writing + this.timeInfo.showing);
 
@@ -235,14 +215,6 @@ class Texts {
       : textAlign === "right"
       ? { x: 0, y: 0 }
       : { x: 0, y: 0 };
-  }
-
-  private changeHeight() {
-    this.canvas.width = this.mainElement.clientWidth * this.pixelRatio;
-    this.canvas.height = this.currentLeon.rect.h * this.pixelRatio;
-    this.canvas.style.width = `${this.mainElement.clientWidth}px`;
-    this.canvas.style.height = `${this.currentLeon.rect.h}px`;
-    this.ctx.scale(this.pixelRatio, this.pixelRatio);
   }
 
   private maintainingTransparent() {

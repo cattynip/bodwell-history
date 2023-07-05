@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import Texts, {
   ICallback,
   TCanvasShowingStyle,
   defaultWaitingTimes
 } from "./Texts";
 import userLangInfo from "@components/languageProvider";
-import { debounce } from "lodash";
 
 interface IComponentProps {
   text: string[];
@@ -17,37 +16,28 @@ const Description = ({
   canvasShowingStyle,
   ...props
 }: IComponentProps & ICallback) => {
+  const parentRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const isLangEng = userLangInfo.userLang === "en";
 
   useEffect(() => {
     if (isLangEng) {
-      const Text = new Texts({
+      if (!canvasRef.current) return;
+
+      const canvas = canvasRef.current;
+      const parent = parentRef.current;
+      if (!canvas || !parent) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const Text = new Texts(canvas, ctx, parent, {
         content: text,
         canvasShowingStyle,
         timeInfo: defaultWaitingTimes,
         callbacks: props
       });
 
-      Text.startAnimation(true);
-
-      const onResize = debounce(() => {
-        Text.disattach();
-
-        const NewText = new Texts({
-          content: text,
-          canvasShowingStyle,
-          timeInfo: defaultWaitingTimes,
-          callbacks: props
-        });
-
-        NewText.startAnimation(true);
-      }, 2000);
-
-      window.addEventListener("resize", onResize);
-
-      return () => {
-        window.removeEventListener("resize", onResize);
-      };
+      Text.startAnimation();
     }
 
     /* eslint-disable react-hooks/exhaustive-deps */
@@ -60,15 +50,9 @@ const Description = ({
           ? "bg-black"
           : "border-[0.2px] border-gray-600 backdrop-blur-3xl"
       }`}
-      id="parent"
+      ref={parentRef}
     >
-      <div id="leonsans">
-        <div id="sample">
-          {text.map((value, idx) => (
-            <p key={idx}>{value}</p>
-          ))}
-        </div>
-      </div>
+      <canvas ref={canvasRef} className="w-full" />
     </div>
   );
 };
